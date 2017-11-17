@@ -1,0 +1,178 @@
+body {
+    margin: 0;
+}
+
+h1 {
+    font-size: 1.25em;
+    margin-left: 120px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+/* font color */
+h3, p, a, legend, label {
+    color: #818181;
+}
+
+input, select{
+  background-color : #222222;
+  border: 1px solid grey;
+  border: none;
+  /*border-bottom: 1px solid grey;*/
+  /*color: #818181;*/
+  font-size: 18px;
+  color: #ccc;
+}
+
+select {
+    border: 1px solid grey;
+}
+
+input {
+    padding-left: 8px;
+    border: none;
+}
+
+input:focus, select:focus{
+    outline: none;
+}
+
+fieldset {
+    border: 1px solid #818181;
+}
+
+/* background-color */
+.leftNav,
+.rightNav {
+    background-color: #222222;
+}
+
+header {
+    background-color: #292B2C;
+    height: 7vh;
+    width: 100%;
+    color: white;
+    border: 1px solid transparent;
+    /* vertical center */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+}
+
+.rightNav {
+    height: 86vh;
+    border: 1px solid;
+    overflow: scroll;
+    width: 380px;
+    /*float: right;*/
+    /*position: absolute;*/
+    position: fixed;
+    right: 0;
+    top: 7vh;
+}
+
+.rightNav .form-group {
+    margin: 10px 5px;
+}
+
+.rightNav .radar-chart {
+    height: 170px;
+    text-align: center;
+    transition: all 0.7s;
+}
+
+.leftNav {
+    height: 86vh;
+    border: 1px solid transparent;
+    border-right: 1px solid black;
+    width: 200px;
+    overflow: scroll;
+    /*position: absolute;*/
+    position: fixed;
+    left: 0;
+    top: 7vh;
+
+    /*float: left;*/
+}
+
+.leftNav .dataStructure {
+    /*border: 1px solid;*/
+    margin-left: 20px;
+}
+
+.leftNav .element-left {
+    margin-left: 10px;
+}
+
+footer {
+    height: 7vh;
+    background-color: #292B2C;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+#canvas {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #424242;
+}
+
+.wraper {
+    width: 100vw;
+    height: 100vh;
+    overflow: scroll;
+}
+
+.radar-chart svg {
+    background-color: #222222;
+}
+
+svg {
+    background-color: #424242;
+}
+
+svg .element {
+    cursor: pointer;
+}
+
+
+.flex {
+    display: flex;
+    margin: 5px 0;
+}
+
+label:first-child {
+    width: 50%;
+    overflow: scroll;
+    /*border: 1px solid blue;*/
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+input:nth-child(2),
+select:nth-child(2) {
+    width: 40%;
+    /*flex: 1;*/
+    margin-left: 10px;
+    overflow: scroll;
+    /*border: 1px solid blue;*/
+}
+
+.quit {
+    color: #ccc;
+    font-size: 30px;
+    text-align: right;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.quit:hover {
+    color: #fff;
+}

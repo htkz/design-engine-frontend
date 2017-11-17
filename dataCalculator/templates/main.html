@@ -1,0 +1,436 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<meta charset="utf-8">
+        <title>DataCalculator</title>
+        {% load static %}
+		<link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'css/sweetalert.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+        <!-- D3.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-hierarchy/1.1.5/d3-hierarchy.min.js"></script>
+        <!-- JointJS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/joint.css' %}"/>
+        <link rel="stylesheet" href="{% static 'css/tippy.css' %}">
+        <link rel="stylesheet" href="{% static 'css/nodestyle.css' %}">
+	</head>
+	<body>
+        <!-- display -->
+        <div class="wraper">
+            <div id="canvas"><div class="contaienr clearfix">
+                <header>
+                    <h1>DataCalculator</h1>
+                </header>
+                <div class="rightNav" style="width: 0;">
+                    <div class="container">
+                        <div class="quit">
+                            <span>&times;</span>
+                        </div>
+                        <form role="form" id="form-node">
+                            <fieldset class="form-group">
+                                <legend>Radar Chart</legend>
+                                <div class="radar-chart"></div>
+                            </fieldset>
+                            <fieldset class="form-group">
+                                <legend>General info</legend>
+                                <div class="flex">
+                                    <label for="nodeId">NodeId: </label>
+                                    <input type="text" class="form-control" name="nodeId" id="nodeId">
+                                </div>
+                                <div class="flex">
+                                    <label for="name">Name: </label>
+                                    <input type="text" class="form-control" name="name" id="name">
+                                </div>
+
+                            </fieldset>
+
+                            <fieldset class="form-group">
+                                <legend>External Links</legend>
+                                <div class="flex">
+                                    <label for="external_prev"><span>Prev:</span></label>
+                                    <select name="prev" class="form-control" id="external_prev">
+                                        <option value=True>true</option>
+                                        <option value=False>false</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex">
+                                    <label for="external_next">Next:</label>
+                                    <select name="next" class="form-control" id="external_next">
+                                        <option value=True>true</option>
+                                        <option value=False>false</option>
+                                    </select>
+                                </div>
+
+                            </fieldset>
+
+                            <fieldset class="form-group">
+                                <legend>Partition Properties</legend>
+                                <div class="flex">
+                                    <label for="fanout">Fanout:</label>
+                                    <select name="fanout" class="form-control" onchange="changeFanoutInput(this.value)">
+                                        <option value="fixed">fixed</option>
+                                        <option value="variable">variable</option>
+                                        <option value="function">function</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex">
+                                    <label for="fanoutFixedValue">fanoutFixedValue:</label>
+                                    <input type="text" class="form-control" name="fanoutFixedValue">
+                                </div>
+                                <div class="flex">
+                                    <label for="fanoutFunction">fanoutFunction:</label>
+                                    <input type="text" class="form-control" name="fanoutFunction">
+                                </div>
+                                <div class="flex">
+                                    <label for="partitioning">Partitioning Type:</label>
+                                    <select class="form-control" name="partitioning" onchange="changePartition(this.value);">
+                                        <option value="function">function</option>
+                                        <option value="none">none</option>
+                                        <option value="sorted">sorted</option>
+                                    </select>
+                                </div>
+                                <div class="flex">
+                                    <label for="partitioningFunction">PartitioningFunction:</label>
+                                    <input type="text" class="form-control" name="partitioningFunction">
+                                </div>
+                                <div class="flex">
+                                    <label for="filtersPerLevel">filtersPerLevel:</label>
+                                    <select class="form-control" name="filtersPerLevel">
+                                        <option value=True>true</option>
+                                        <option value=False>false</option>
+                                    </select>
+                                </div>
+                                <div class="flex">
+                                    <label for="filtersPerRun">filtersPerRun:</label>
+                                    <select class="form-control" name="filtersPerRun">
+                                        <option value=True>true</option>
+                                        <option value=False>false</option>
+                                    </select>
+                                </div>
+                                <div class="flex">
+                                    <label for="initialRunSize">initialRunSize:</label>
+                                    <input type="text" class="form-control" name="initialRunSize">
+                                </div>
+                                <div class="flex">
+                                    <label for="maxRunsPerLevel">maxRunsPerLevel:</label>
+                                    <input type="text" class="form-control" name="maxRunsPerLevel">
+                                </div>
+                                <div class="flex">
+                                    <label for="mergeFactor">mergeFactor:</label>
+                                    <input type="text" class="form-control" name="mergeFactor">
+                                </div>
+                                <div class="flex">
+                                    <label for="sorted">Sorted:</label>
+                                    <select class="form-control" name="sorted">
+                                        <option value="append&resort">append resort</option>
+                                        <option value="partitioning">partitioning</option>
+                                        <option value="none">none</option>
+                                        <option value="push&insert" selected>push insert</option>
+                                    </select>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="form-group">
+                                <legend>Addressing</legend>
+                                <div class="flex">
+                                    <label for="directAddressing">Direct:</label>
+                                    <select class="form-control" name="directAddressing">
+                                        <option value=True>true</option>
+                                        <option value=False>false</option>
+                                    </select>
+                                </div>
+                                <div class="flex">
+                                    <label for="head">Head:</label>
+                                    <select class="form-control" name="head">
+                                        <option value=True>true</option>
+                                        <option value=False>false</option>
+                                    </select>
+                                </div>
+                                <div class="flex">
+                                    <label for="tail">Tail:</label>
+                                    <select class="form-control" name="tail">
+                                        <option value=True>true</option>
+                                        <option value=False>false</option>
+                                    </select>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="form-group">
+                                <legend>Per partition</legend>
+                                <div class="flex">
+                                    <label for="prevLinks">Prev links:</label>
+                                    <select class="form-control" name="prevLinks">
+                                        <option value=True>true</option>
+                                        <option value=False>false</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex">
+                                    <label for="nextLinks">Next links:</label>
+                                    <select class="form-control" name="nextLinks">
+                                        <option value=True>true</option>
+                                        <option value=False>false</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex">
+                                    <label for="skiplinks">Skip links:</label>
+                                    <select class="form-control" name="skiplinks">
+                                        <option value="none">none</option>
+                                        <option value="perfect">perfect</option>
+                                        <option value="randomized">randomized</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex">
+                                    <label for="skiplinksProbability">skiplinksProbability:</label>
+                                    <input class="form-control"  type="text" name="skiplinksProbability">
+                                </div>
+                                <div class="flex">
+                                    <label for="zonemapsmax">zonemapmax:</label>
+                                    <select class="form-control" name="zoneMapMax">
+                                        <option value=True>true</option>
+                                        <option value=False>false</option>
+                                    </select>
+                                </div>
+                                <div class="flex">
+                                    <label for="zonemapsmin">zonemapmin:</label>
+                                    <select class="form-control" name="zoneMapMin">
+                                        <option value=True>true</option>
+                                        <option value=False>false</option>
+                                    </select>
+                                </div>
+                                <div class="flex">
+                                    <label for="bloomFilters">Bloom filters:</label>
+                                    <select class="form-control" name="bloomFilters">
+                                        <option value=False>false</option>
+                                        <option value=True>true</option>
+                                    </select>
+                                </div>
+                                <div class="flex">
+                                    <label for="hasFunctionsNumber">hasFunctionsNumber:</label>
+                                    <input class="form-control" type="text" name="HashFunctionsNum">
+                                </div>
+                                <div class="flex">
+                                    <label for="numberOfBits">numberOfBits:</label>
+                                    <input class="form-control" type="text" name="NumOfBits">
+                                </div>
+                                <div class="flex">
+                                    <label for="keyRetention">Key Retention:</label>
+                                    <select class="form-control" name="keyRetention">
+                                        <option value="none">none</option>
+                                        <option value="full">full</option>
+                                        <option value="function">function</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex">
+                                    <label for="keyRetentionCompression">keyRetentionCompression:</label>
+                                    <select class="form-control" name="keyRetentionCompression">
+                                        <option value="delta_encoding">delta_encoding</option>
+                                        <option value="gzip">gzip</option>
+                                        <option value="null_suppressing">null_suppressing</option>
+                                        <option value="uncompressed">uncompressed</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex">
+                                    <label for="keyRetentionFunction">keyRetentionFunction:</label>
+                                    <input class="form-control" type="text" name="keyRetentionFunction">
+                                </div>
+
+                                <div class="flex">
+                                    <label for="valueRetention">Value Retention:</label>
+                                    <select class="form-control" name="valueRetention">
+                                        <option value="none">none</option>
+                                        <option value="full">full</option>
+                                        <option value="function">function</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex">
+                                    <label for="valueRetentionCompression">valueRetentionCompression:</label>
+                                    <select class="form-control" name="valueRetentionCompression">
+                                        <option value="delta_encoding">delta_encoding</option>
+                                        <option value="gzip">gzip</option>
+                                        <option value="null_suppressing">null_suppressing</option>
+                                        <option value="uncompressed">uncompressed</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex">
+                                    <label for="valueRetentionFunction">valueRetentionFunction:</label>
+                                    <input class="form-control" type="text" name="valueRetentionFunction">
+                                </div>
+
+                                <div class="flex">
+                                    <label for="capacity">Capacity:</label>
+                                    <select class="form-control" name="capacity" onchange="changeCapacityInput(this.value)">
+                                        <option value="fixed">fixed</option>
+                                        <option value="variable">variable</option>
+                                        <option value="balanced">balanced</option>
+                                        <option value="function">function</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex">
+                                    <label for="capacityValue">capacityValue:</label>
+                                    <input class="form-control" type="text" name="capacityValue">
+                                </div>
+
+                                <div class="flex">
+                                    <label for="capacityFunction">capacityFunction:</label>
+                                    <input class="form-control" type="text" name="capacityFunction">
+                                </div>
+
+                                <div class="flex">
+                                    <label for="Utilization">Utilization Constraint:</label>
+                                    <select class="form-control" name="Utilization">
+                                        <option value="none">none</option>
+                                        <option value="leq_capacity">leq_capacity</option>
+                                        <option value="function">function</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex">
+                                    <label for="UtilizationFunction">UtilizationFunction:</label>
+                                    <input class="form-control" type="text" name="UtilizationFunction">
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="form-group">
+                                <legend>Data Layout</legend>
+                                <div class="flex">
+                                    <label for="linksLayout">Links Layout:</label>
+                                    <select name="linksLayout" class="form-control">
+                                        <option value="consolidate">consolidate</option>
+                                        <option value="scatter">scatter</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex">
+                                    <label for="filtersLayout">Filters Layout:</label>
+                                    <select name="filtersLayout" class="form-control">
+                                        <option value="consolidaye">consolidaye</option>
+                                        <option value="scatter">scatter</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex">
+                                    <label for="keyValueLayout">Key/Values Layout:</label>
+                                    <select name="keyValueLayout" class="form-control">
+                                        <option value="rowwise">rowwise</option>
+                                        <option value="columnar">columnary</option>
+                                        <option value="dump">dump</option>
+                                    </select>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="form-group">
+                                <legend>Sub-partitions</legend>
+                                <div class="flex">
+                                    <label for="accessPartitions">How to access:</label>
+                                    <select name="accessPartitions" class="form-control">
+                                        <option value="inline">inline</option>
+                                        <option value="pointed">pointed</option>
+                                        <option value="none">none</option>
+                                    </select>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="form-group" id="fieldset-color">
+                                <legend>Color</legend>
+                                <div class="flex">
+                                    <label for="color">color:</label>
+                                    <input type="color" name="color" value="#767676">
+                                </div>
+                            </fieldset>
+                            <fieldset class="form-group" id="fieldset-shortname">
+                                <legend>Short Name</legend>
+                                <div class="flex">
+                                    <label for="shortName">short name:</label>
+                                    <input type="text" class="form-control" maxlength="2" name="shortName" value="IT">
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+                <div class="leftNav">
+                    <div class="dataStructure" id="dataStructure">
+                        <h3>DataStructures</h3>
+                        <!-- <p id="B-Tree">
+                            <i class="fa fa-caret-up fa-lg element-icon-color" style="color: rgb(153, 153, 153);"></i>
+                            <a href="#" class="element-left">B-Tree</a>
+                        </p> -->
+
+                    </div>
+                    <div class="element" id="element" hidden>
+
+                    </div>
+                </div>
+                <footer></footer>
+            </div>
+        </div>
+
+    </div>
+
+
+
+        <!-- data -->
+        <input id="elements" type="hidden" value="{{ elements }}">
+        <input id="dataStructures" type="hidden" value="{{ dataStructures }}">
+        <input id="db-manage" type="hidden" value="{{ dbManage }}">
+        <div class="radar-temp" hidden></div>
+
+
+        <!-- JointJS Dependencies -->
+        <script src="{% static 'js/jointjs/tippy.min.js' %}"></script>
+        <script src="{% static 'js/jointjs/jquery.js' %}"></script>
+        <script src="{% static 'js/jointjs/lodash.js' %}"></script>
+        <script src="{% static 'js/jointjs/backbone-min.js' %}"></script>
+
+
+        <script src="{% static 'js/jointjs/graphlib.core.min.js' %}"></script>
+        <script src="{% static 'js/jointjs/dagre.core.min.js' %}"></script>
+
+        <script src="{% static 'js/jointjs/joint.js' %}"></script>
+        <script src="{% static 'js/jointjs/tether.min.js' %}"></script>
+        <script src="{% static 'js/jointjs/joint.shapes.chart.min.js' %}"></script>
+
+
+
+        <script src="{% static 'js/global.js' %}"></script>
+
+        <script src="{% static 'js/CADnode.js' %}"></script>
+
+        <script src="{% static 'js/sweetalert/sweetalert.min.js' %}"></script>
+
+        <script src="{% static 'js/app.js' %}"></script>
+
+        <script src="{% static 'js/dataStructure.js' %}"></script>
+
+        <script src="{% static 'js/jsonTransfer.js' %}"></script>
+        <script src="{% static 'js/refresh.js' %}"></script>
+
+        <script src="{% static 'js/element.js' %}"></script>
+
+        <script src="{% static 'js/init.js' %}"></script>
+
+
+        <script src="{% static 'js/test.js' %}"></script>
+
+        <!-- radar chart -->
+        <script src="{% static 'js/radar-tree-chart/radarChart.js' %}"></script>
+        <script src="{% static 'js/radar-tree-chart/radarTree.js' %}"></script>
+        <script src="{% static 'js/radar-tree-chart/radarDraw.js' %}"></script>
+
+
+
+
+
+	</body>
+</html>

@@ -1,0 +1,30 @@
+/* port styling */
+svg .available-magnet {
+    fill: #03a9f4;
+  stroke: #03a9f4;
+}
+
+/* element styling */
+svg .available-cell rect {
+    stroke-dasharray: 5, 2;
+}
+
+svg .connection {
+   /* stroke: black; */
+   /* stroke width cannot be overriden by attribute? */
+   stroke-width: 5;
+   fill: none;
+   stroke-linejoin: round;
+   stroke: #fff;
+}
+
+svg .marker-source, .marker-target {
+/* Cannot be in CSS otherwise it could not be overruled by attributes.
+   fill: black;
+   stroke: black;
+*/
+   /* This makes the arrowheads point to the border of objects even though the transform: scale() is applied on them. */
+   vector-effect: non-scaling-stroke;
+   fill: #fff;
+   stroke: #fff;
+}
